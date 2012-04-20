@@ -11,6 +11,8 @@ make install
 (you can use 'make PREFIX=/some/other/directory install' to install in non-standard location)
 Also there is useful init scripts under 'utils' directory. You can use 'em on Debian-based systems.
 
+You can use my redis config.
+
 ***
 
 Installing phpredis
