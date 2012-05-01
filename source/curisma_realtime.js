@@ -15,17 +15,22 @@ if(debug){
 } 
 
 var rclient = redis.createClient();
+
 rclient.on('error', function(err){
   if(debug) console.log(err);
 });
 
 rclient.on("connect", function(){
-  console.log('Connection to redis established');
+  if(debug) console.log('Connection to redis established');
 });
 
 io.sockets.on('connection', function(socket) {
   var suid, channelslist,
       subscriber = redis.createClient();
+
+  subscriber.on('error', function(err){
+    if(debug) console.log(err);
+  });
   if(debug) console.log('New connection at '+ curTimeMs());
   socket.on('disconnect', function(){
     if(debug) console.log('Client disconnected at ' + curTimeMs());
@@ -43,6 +48,7 @@ io.sockets.on('connection', function(socket) {
     }
     if(!rclient || !rclient.connected){
       if(debug) console.log('No db connection');
+      fn('no connection to database');
       return;
     }
     //@TODO write auth phase according to Yii
@@ -65,7 +71,6 @@ io.sockets.on('connection', function(socket) {
       socket.disconnect();
       return;
     }
-    
     //subsribes on all requested channels
     var channels = data.channels;
     for(var i=0; i< channels.length; i++){
@@ -75,39 +80,6 @@ io.sockets.on('connection', function(socket) {
     if(debug) subscriber.subscribe('server:channels:debug');
     
     fn('ok');
-  });
-
-  socket.on('addfollowing', function(data, fn){
-    fid = parseInt(data.fid);
-    if(!fid || fid <= 0){
-      fn('Following id must be presented');
-      return;
-    }
-    rclient.multi()
-      .sadd('uid:'+suid+':following', fid)
-      .sadd('uid:'+fid+':follower', suid)
-      .exec(function(err, replies){
-        if(!err){
-          subscriber.psubscribe('uid:'+fid+':channels:*', function(err, reply){
-            fn('ok');
-          });
-        }
-      });
-  });
-
-  socket.on('rmfollowing', function(data, fn){
-    fid = parseInt(data.fid);
-    if(!fid || fid <= 0){
-      fn('Following id must be presented');
-      return;
-    }
-    rclient.srem('uid:'+suid+':following', fid, function(err, reply){
-      if(!err){
-        subscriber.punsubscribe('uid:'+fid+':channels:*', function(err, reply){
-          fn('ok');
-        });
-      }
-    });
   });
 
   //-
