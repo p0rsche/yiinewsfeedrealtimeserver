@@ -112,5 +112,6 @@ io.sockets.on('connection', function(socket) {
  * Gets current time in milliseconds
  */
 function curTimeMs(){
-  return (new Date()).getTime();
+  //in seconds
+  return Math.round((new Date()).getTime() / 1000);
 }
