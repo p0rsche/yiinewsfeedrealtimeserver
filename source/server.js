@@ -1,5 +1,5 @@
 /**
- * Curisma Realtime server
+ * Yii Newsgeed Realtime server
  *
  * Dependencies:
  * - node.js
