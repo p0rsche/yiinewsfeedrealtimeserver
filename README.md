@@ -1,4 +1,4 @@
-Yii Newsgeed Realtime server
+Yii Newsfeed Realtime server
 -------------------------
 
 Installing redis:

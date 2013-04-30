@@ -1,5 +1,5 @@
 /**
- * Yii Newsgeed Realtime server
+ * Yii Newsfeed Realtime server
  *
  * Dependencies:
  * - node.js
