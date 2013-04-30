@@ -1,4 +1,4 @@
-Curisma Realtime server
+Yii Newsgeed Realtime server
 -------------------------
 
 Installing redis:
